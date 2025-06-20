@@ -66,10 +66,16 @@ const Page = () => {
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
     try {
+      console.log(data)
       const response = await axios.post('/api/signup', data);
+      console.log(response.data);
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
       toast.success(response.data.message);
       router.replace(`/verify/${data.username}`);
-    } catch (error) {
+    }
+     catch (error) {
       const axiosError = error as AxiosError;
       const errorMessage =
         (axiosError.response?.data as ApiResponse<string>)?.message ||
